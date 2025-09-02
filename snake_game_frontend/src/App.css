@@ -1,104 +1,249 @@
-/* CSS Variables for Theme Management */
+/* CSS Variables for Theme Management and Game Palette */
 :root {
-  /* Light theme colors */
+  /* Light theme base */
   --bg-primary: #ffffff;
-  --bg-secondary: #f8f9fa;
-  --text-primary: #282c34;
-  --text-secondary: #61dafb;
-  --border-color: #e9ecef;
-  --button-bg: #007bff;
+  --bg-secondary: #f7f8fa;
+  --text-primary: #1f2937;
+  --text-muted: #6b7280;
+  --border-color: #e5e7eb;
+
+  /* Game palette (provided) */
+  --snake-primary: #388e3c; /* primary */
+  --food-accent:  #e53935; /* accent */
+  --board-bg:     #eeeeee; /* secondary */
+
+  /* Buttons */
+  --button-bg: #111827;
   --button-text: #ffffff;
+  --button-outline: #d1d5db;
 }
 
 [data-theme="dark"] {
-  /* Dark theme colors */
-  --bg-primary: #1a1a1a;
-  --bg-secondary: #282c34;
-  --text-primary: #ffffff;
-  --text-secondary: #61dafb;
-  --border-color: #404040;
-  --button-bg: #0056b3;
-  --button-text: #ffffff;
+  /* Optional dark theme */
+  --bg-primary: #0b0b0c;
+  --bg-secondary: #131417;
+  --text-primary: #f9fafb;
+  --text-muted: #9ca3af;
+  --border-color: #232429;
+
+  --button-bg: #1f2937;
+  --button-text: #f3f4f6;
+  --button-outline: #374151;
 }
+
+/* Base layout */
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; }
+body { margin: 0; font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
 
 .App {
-  text-align: center;
-  background-color: var(--bg-primary);
+  min-height: 100%;
+  background: radial-gradient(1200px 600px at 10% -20%, rgba(56, 142, 60, 0.06), transparent 60%),
+              radial-gradient(1000px 800px at 120% 10%, rgba(229, 57, 53, 0.05), transparent 65%),
+              var(--bg-primary);
   color: var(--text-primary);
-  min-height: 100vh;
-  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+/* Containers */
+.container {
+  width: 100%;
+  max-width: 920px;
+  margin: 0 auto;
+  padding: 0 20px;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
+/* Header */
+.page-header {
+  position: sticky;
+  top: 0;
+  background: linear-gradient(180deg, var(--bg-secondary), transparent 80%);
+  backdrop-filter: blur(6px);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 10;
 }
 
-.App-header {
-  background-color: var(--bg-secondary);
-  min-height: 100vh;
+.header-row {
   display: flex;
-  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 0;
+}
+
+.title {
+  margin: 0;
+  font-size: 28px;
+  letter-spacing: 0.5px;
+  font-weight: 700;
+}
+
+/* Scoreboard */
+.score-board {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-primary);
+  font-size: 16px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-primary);
+  padding: 8px 12px;
+  border-radius: 12px;
+}
+
+.score-board .label {
+  color: var(--text-muted);
+}
+
+.score-board .score {
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 8px;
+  background: var(--board-bg);
+}
+
+.score-board .status {
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-size: 12px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+}
+
+/* Main section */
+.page-main {
+  display: flex;
   align-items: center;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: var(--text-primary);
-  transition: background-color 0.3s ease;
-  position: relative;
+  padding: 28px 0 40px;
 }
 
-.App-link {
-  color: var(--text-secondary);
-  transition: color 0.3s ease;
+/* Board wrapper to center responsively */
+.board-wrapper {
+  display: grid;
+  place-items: center;
+  margin: 18px auto 22px;
+  width: 100%;
+}
+
+.game-board {
+  /* Responsive square: clamp to keep within viewport while staying square */
+  width: min(90vw, 640px);
+  aspect-ratio: 1 / 1;
+  background: var(--board-bg);
+  border-radius: 14px;
+  border: 1px solid var(--border-color);
+  display: grid;
+  overflow: hidden;
+  box-shadow:
+    0 1px 2px rgba(0,0,0,0.04),
+    0 8px 24px rgba(0,0,0,0.06) inset;
+}
+
+/* Individual cells, subtle separators for a modern look */
+.cell {
+  background: transparent;
+  outline: 1px solid rgba(0,0,0,0.03); /* faint grid lines */
+}
+
+/* Buttons */
+.btn {
+  -webkit-tap-highlight-color: transparent;
+  outline: none;
+  border: none;
+  background: var(--button-bg);
+  color: var(--button-text);
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.2px;
+  cursor: pointer;
+  transition: transform 120ms ease, box-shadow 120ms ease, opacity 120ms ease;
+  box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.btn:hover { transform: translateY(-1px); box-shadow: 0 3px 10px rgba(0,0,0,0.08); }
+.btn:active { transform: translateY(0); }
+
+.btn[disabled], .btn[aria-disabled="true"] {
+  opacity: 0.55;
+  cursor: not-allowed;
 }
 
 .theme-toggle {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background-color: var(--button-bg);
-  color: var(--button-text);
-  border: none;
-  border-radius: 8px;
-  padding: 10px 20px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
 }
 
-.theme-toggle:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+.btn-primary {
+  background: var(--snake-primary);
+  color: #fff;
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text-primary);
+  border: 1px solid var(--button-outline);
+}
+
+.btn-ghost {
+  background: transparent;
+  color: var(--text-muted);
+}
+
+/* Controls row */
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin: 6px 0 12px;
+}
+
+/* Instructions */
+.instructions {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+.instructions .hint {
+  margin-top: 6px;
+  font-size: 13px;
   opacity: 0.9;
 }
 
-.theme-toggle:active {
-  transform: translateY(0);
+/* Footer */
+.page-footer {
+  border-top: 1px solid var(--border-color);
+  padding: 16px 0 26px;
+  text-align: center;
+  color: var(--text-muted);
+  background: linear-gradient(0deg, var(--bg-secondary), transparent 80%);
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.muted { color: var(--text-muted); }
+
+/* Accessibility helpers */
+.sr-only {
+  border: 0 !important;
+  clip: rect(1px, 1px, 1px, 1px) !important;
+  clip-path: inset(50%) !important;
+  height: 1px !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  padding: 0 !important;
+  position: absolute !important;
+  width: 1px !important;
+  white-space: nowrap !important;
 }
 
-/* Responsive design for mobile */
-@media (max-width: 768px) {
-  .theme-toggle {
-    top: 10px;
-    right: 10px;
-    padding: 8px 16px;
-    font-size: 12px;
-  }
+/* Responsiveness tweaks */
+@media (max-width: 480px) {
+  .title { font-size: 22px; }
+  .score-board { font-size: 14px; }
+  .btn { padding: 9px 12px; font-size: 13px; }
 }
